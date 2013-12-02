@@ -58,6 +58,7 @@ gems=(
 fluentd
 zookeeper
 consistent-hashing
+fluent-plugin-redis-publish
 )
 
 index=0
@@ -69,8 +70,8 @@ done
 
 ## 4: gems from git
 source_gems=(
-fluent-plugin-kafka
 kafka-rb
+fluent-plugin-kafka
 )
 
 index=0
@@ -84,4 +85,4 @@ while [ "${index}" -lt "${#source_gems[@]}" ] ; do
   ((index++))
 done
 
-fpm -s dir -t rpm -n "${project}" -v ${version} --prefix ${project_path} ${project}.rpm
+fpm -s dir -t rpm -n "${project}" -v ${version} --prefix ${project_path} 
