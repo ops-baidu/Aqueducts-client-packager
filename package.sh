@@ -13,6 +13,7 @@ LDFLAGS="-L${install_path}/lib -I${install_path}/include"
 CFLAGS="-I${install_path}/include -L${install_path}/lib"
 export LDFLAGS CFLAGS
 
+rm -rf ${project_path}
 mkdir -p ${install_path} ${cache_path} ${src_path} ${pkg_path}
 
 ## 1: bin
@@ -23,7 +24,7 @@ ruby-1.9.3-p448
 
 remote_addrs=(
 http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p448.tar.gz
+http://www.dnsbalance.ring.gr.jp/archives/lang/ruby/1.9/ruby-1.9.3-p448.tar.gz
 )
 
 software_count=${#softwares[@]}
@@ -44,14 +45,14 @@ while [ "${index}" -lt "${software_count}" ] ; do
   ((index++))
 done 
 
-## 2: rubygems
-#software=rubygems-1.8.24
-#wget http://production.cf.rubygems.org/rubygems/rubygems-1.8.24.tgz -P ${cache_path}
-#cd ${cache_path}
-#gzip ${software}.tgz 
-#tar -xvf ${software}.tar
-#cd ${cache_path}/${software}
-#${install_path}/bin/ruby setup.rb
+# 2: rubygems
+software=rubygems-1.8.24
+wget http://production.cf.rubygems.org/rubygems/rubygems-1.8.24.tgz -P ${cache_path}
+cd ${cache_path}
+gzip ${software}.tgz 
+tar -xvf ${software}.tar
+cd ${cache_path}/${software}
+${install_path}/bin/ruby setup.rb
 
 ## 3: gems
 gems=(
@@ -59,6 +60,7 @@ fluentd
 zookeeper
 consistent-hashing
 fluent-plugin-redis-publish
+rest-client
 )
 
 index=0
@@ -72,17 +74,23 @@ done
 source_gems=(
 kafka-rb
 fluent-plugin-kafka
+fpm
 )
 
 index=0
 while [ "${index}" -lt "${#source_gems[@]}" ] ; do
   gem=${source_gems[${index}]}
   cd ${src_path}
-  git clone http://github.com/ops-baidu/${gem}.git
+  git clone git://github.com/ops-baidu/${gem}.git
   cd ${gem}
   ${install_path}/bin/gem build ${gem}.gemspec
-  ${install_path}/bin/gem install -l ${src_path}/${gem}/${gem}-*.gem
+  ${install_path}/bin/gem install -l ${src_path}/${gem}/${gem}-*.gem --no-rdoc --no-ri
   ((index++))
 done
 
-fpm -s dir -t rpm -n "${project}" -v ${version} --prefix ${project_path} 
+${install_path}/bin/gem install fpm --no-rdoc --no-ri 
+
+rm -rf ${cache_path} ${src_path} ${install_path}/share
+
+cd 
+${install_path}/bin/fpm -s dir -t rpm -n "${project}" -v ${version} ${project_path} 
