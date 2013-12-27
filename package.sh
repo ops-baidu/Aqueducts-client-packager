@@ -1,9 +1,11 @@
 #!/bin/bash
+set -x
 
 project=Aqueducts
 version=1.0.0
 
 project_path=/opt/${project}
+rm -rf ${project_path}
 install_path=${project_path}/embedded
 cache_path=${project_path}/cache
 src_path=${project_path}/src
@@ -19,12 +21,12 @@ mkdir -p ${install_path} ${cache_path} ${src_path} ${pkg_path}
 ## 1: bin
 softwares=(
 yaml-0.1.4
-ruby-1.9.3-p448
+ruby-1.9.3-p484
 )
 
 remote_addrs=(
 http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
-http://www.dnsbalance.ring.gr.jp/archives/lang/ruby/1.9/ruby-1.9.3-p448.tar.gz
+http://ruby.taobao.org/mirrors/ruby/1.9/ruby-1.9.3-p484.tar.gz
 )
 
 software_count=${#softwares[@]}
@@ -49,8 +51,7 @@ done
 software=rubygems-1.8.24
 wget http://production.cf.rubygems.org/rubygems/rubygems-1.8.24.tgz -P ${cache_path}
 cd ${cache_path}
-gzip ${software}.tgz 
-tar -xvf ${software}.tar
+tar -xzvf ${software}.tgz
 cd ${cache_path}/${software}
 ${install_path}/bin/ruby setup.rb
 
