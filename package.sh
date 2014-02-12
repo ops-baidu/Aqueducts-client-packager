@@ -63,6 +63,7 @@ consistent-hashing
 fluent-plugin-redis-publish
 rest-client
 poseidon
+mime-type
 )
 
 index=0
