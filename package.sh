@@ -62,6 +62,7 @@ zookeeper
 consistent-hashing
 fluent-plugin-redis-publish
 rest-client
+poseidon
 )
 
 index=0
@@ -73,7 +74,6 @@ done
 
 ## 4: gems from git
 source_gems=(
-kafka-rb
 fluent-plugin-kafka
 fpm
 )
