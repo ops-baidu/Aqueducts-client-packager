@@ -3,6 +3,7 @@ set -x
 
 project=Aqueducts
 version=1.0.0
+output_path=/home/work/
 
 project_path=/opt/${project}
 rm -rf ${project_path}
@@ -39,13 +40,13 @@ while [ "${index}" -lt "${software_count}" ] ; do
   wget ${remote_addr} -P ${cache_path}
   cd ${cache_path}
   tar -xzf ${software}.tar.gz
-    cd ${software}
-    ./configure --prefix=${install_path}
-    make -j 3
-    make -j 3 install
+  cd ${software}
+  ./configure --prefix=${install_path}
+  make -j 3
+  make -j 3 install
   
   ((index++))
-done 
+done
 
 # 2: rubygems
 software=rubygems-1.8.24
@@ -69,30 +70,36 @@ mime-types
 index=0
 while [ "${index}" -lt "${#gems[@]}" ] ; do
   gem=${gems[${index}]}
-  ${install_path}/bin/gem install ${gem} --no-rdoc --no-ri 
+  ${install_path}/bin/gem install ${gem} --no-rdoc --no-ri  || exit 11
   ((index++))
 done
 
 ## 4: gems from git
 source_gems=(
 fluent-plugin-kafka
-fpm
 )
 
 index=0
 while [ "${index}" -lt "${#source_gems[@]}" ] ; do
   gem=${source_gems[${index}]}
   cd ${src_path}
-  git clone git://github.com/ops-baidu/${gem}.git
-  cd ${gem}
-  ${install_path}/bin/gem build ${gem}.gemspec
-  ${install_path}/bin/gem install -l ${src_path}/${gem}/${gem}-*.gem --no-rdoc --no-ri
+  git clone git://github.com/ops-baidu/${gem}.git   &&\
+  cd ${gem}                                         &&\
+  ${install_path}/bin/gem build ${gem}.gemspec      &&\
+  ${install_path}/bin/gem install -l ${src_path}/${gem}/${gem}-*.gem --no-rdoc --no-ri || exit 11
   ((index++))
 done
 
-${install_path}/bin/gem install fpm --no-rdoc --no-ri 
+## bug : install fpm twice , one from local , one from gem , the reason is fix this problem is expensive.
+cd ${src_path}
+gem=fpm
+git clone git://github.com/ops-baidu/${gem}.git
+cd ${gem}
+${install_path}/bin/gem build ${gem}.gemspec
+${install_path}/bin/gem install -l ${src_path}/${gem}/${gem}-*.gem --no-rdoc --no-ri
+${install_path}/bin/gem install ${gem} --no-rdoc --no-ri || exit 11
 
+## package
 rm -rf ${cache_path} ${src_path} ${install_path}/share
-
-cd 
-${install_path}/bin/fpm -s dir -t rpm -n "${project}" -v ${version} ${project_path} 
+cd
+${install_path}/bin/fpm -s dir -t rpm -n "${project}" -v ${version} -p ${output_path} -f ${project_path}  || exit 12 
