@@ -14,9 +14,10 @@ mkdir -p ${tmp_dir} ${output_dir}
 cd ${tmp_dir}
 
 git clone -b aqueducts http://gitlab.baidu.com/qudongfang/logstash.git
-cd logstash && make flatjar && cp -f ./build/logstash-*.jar ${output_dir} && cd ../
+cd logstash && make flatjar
+cp -f ./build/logstash-* ${output_dir} && cd ../
 
 git clone -b aqueducts http://gitlab.baidu.com/qudongfang/logstash-kafka.git
 cd logstash-kafka && make flatjar
-mkdir -p ~/nfs/download/logstash/${tmp_dir}/ && cp -f ./build/logstash-*.jar ${outout_dir} && rm -f ${current_dir} && ln -s ${output_dir} ${current_dir}
+mkdir -p ~/nfs/download/logstash/${tmp_dir}/ && cp -f ./build/logstash-* ${outout_dir} && rm -f ${current_dir} && ln -s ${output_dir} ${current_dir}
 
