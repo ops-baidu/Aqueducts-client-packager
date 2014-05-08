@@ -6,7 +6,7 @@ current_dir=~/nsf/download/logstash/current
 JAVA_HOME=`pwd`/jdk1.6.0_27_x64
 PATH=${JAVA_HOME}/bin:$PATH
 
-if [ ! -d "${JAVA_HOME}"]; then  
+if [ ! -d "${JAVA_HOME}" ]; then  
   wget -q http://download.aqueducts.baidu.com/jdk_1.6.tar.gz && tar xzf jdk_1.6.tar.gz &&  rm -f jdk_1.6.tar.gz
 fi  
 
