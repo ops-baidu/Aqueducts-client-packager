@@ -21,4 +21,4 @@ rm -f ${current_dir} && ln -s ${output_dir} ${current_dir}
 
 git clone -b aqueducts http://gitlab.baidu.com/qudongfang/logstash-kafka.git
 cd logstash-kafka && make flatjar
-mkdir -p ~/nfs/download/logstash/${tmp_dir}/ && cp -f ./build/logstash-* ${outout_dir}
+mkdir -p ~/nfs/download/logstash/${tmp_dir}/ && cp -f ./build/logstash-* ${output_dir}
