@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tmp_dir=`date +%Y%M%d%H%m`
+tmp_dir=`date +%Y%m%d%H%M`
 mkdir ${tmp_dir}
 cd ${tmp_dir}
 
@@ -12,10 +12,10 @@ wget -q http://download.aqueducts.baidu.com/jdk_1.6.tar.gz && tar xzf jdk_1.6.ta
 JAVA_HOME=`pwd`/jdk1.6.0_27_x64
 PATH=${JAVA_HOME}/bin:$PATH
 
-git clone https://github.com/castomer/logstash.git && git checkout aqueducts
+git clone http://gitlab.baidu.com/qudongfang/logstash.git && git checkout aqueducts
 cd logstash && make flatjar && cp -f ./build/logstash-*.jar ../output && cd ../
 
-git clone https://github.com/castomer/logstash-kafka.git && git checkout aqueducts
+git clone http://gitlab.baidu.com/qudongfang/logstash-kafka.git && git checkout aqueducts
 cd logstash-kafka && make flatjar && cp -f ./build/logstash-*.jar ../output && cd ../
 
 cd ../output
